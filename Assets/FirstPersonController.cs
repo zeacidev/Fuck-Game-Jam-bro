@@ -34,6 +34,9 @@ public class FirstPersonController : MonoBehaviour
     [Tooltip("Fraction of control kept while airborne (1 = same as ground).")]
     [Range(0f, 1f)]
     [SerializeField] private float airControl = 0.5f;
+    [Tooltip("Lowest grip allowed, so zero-friction surfaces (ice) are slippery but never lock movement completely.")]
+    [Range(0f, 1f)]
+    [SerializeField] private float minGrip = 0.05f;
 
     private InputAction moveAction;
     private InputAction lookAction;
@@ -142,7 +145,7 @@ public class FirstPersonController : MonoBehaviour
         Vector3 targetVelocity = moveDir * targetSpeed;
 
         // Grip: 1 on normal ground, close to 0 on ice. Applies to both speeding up and slowing down.
-        float grip = Mathf.Clamp01(surfaceFriction / normalFriction);
+        float grip = Mathf.Clamp(surfaceFriction / normalFriction, minGrip, 1f);
         if (!controller.isGrounded)
             grip = Mathf.Max(grip, 0f) * airControl;
 
