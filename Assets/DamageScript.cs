@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
 
+/// Trigger-based damage zone (Option 2).
+/// Needs: a Collider with "Is Trigger" on, and a Rigidbody on either this object or the player.
 public class DamageScript : MonoBehaviour
 {
     public int damageAmount = 10;
@@ -10,39 +12,44 @@ public class DamageScript : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        PlayerHealth health = other.GetComponentInParent<PlayerHealth>();
+        if (health != null && damageCoroutine == null)
         {
-            if (damageCoroutine == null)
-            {
-                damageCoroutine = StartCoroutine(DealDamageOverTime(other.gameObject));
-            }
+            damageCoroutine = StartCoroutine(DealDamageOverTime(health));
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+        StopDamage();
+    }
+
+    private void OnDisable()
+    {
+        StopDamage();
+    }
+
+    private void StopDamage()
+    {
+        if (damageCoroutine != null)
         {
-            if (damageCoroutine != null)
-            {
-                StopCoroutine(damageCoroutine);
-                damageCoroutine = null;
-            }
+            StopCoroutine(damageCoroutine);
+            damageCoroutine = null;
         }
     }
 
-    private IEnumerator DealDamageOverTime(GameObject player)
+    private IEnumerator DealDamageOverTime(PlayerHealth health)
     {
-        PlayerHealth health = player.GetComponentInParent<PlayerHealth>();
-
-        while (true)
+        // Stops automatically if the player dies or is destroyed
+        while (health != null && !health.IsDead)
         {
-            if (health != null)
-            {
-                health.TakeDamage(damageAmount);
-            }
-
+            health.TakeDamage(damageAmount);
             yield return new WaitForSeconds(damageInterval);
         }
+
+        damageCoroutine = null;
     }
 }
