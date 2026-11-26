@@ -155,6 +155,11 @@ public class BatSwing : MonoBehaviour
             onHit?.Invoke(col);
 
             if (logHits) Debug.Log($"Bat hit {col.name}", col);
+
+            if (col.CompareTag("JuleDekoration"))
+            {
+                Destroy(col.gameObject);
+            }
         }
     }
 
