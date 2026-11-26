@@ -1,30 +1,48 @@
 using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DamageScript : MonoBehaviour
 {
-    public PlayerHealth pHealth;
-    bool isDamaging;
-    private IEnumerator WaitForABit(float delay)
-    {
-        yield return new WaitForSeconds(delay);
-        pHealth.TakeDamage(5);
-        isDamaging = true;
-    }
-    void OnTriggerStay(Collider other)
+    public int damageAmount = 10;
+    public float damageInterval = 1f;
+
+    private Coroutine damageCoroutine;
+
+    private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            if (!isDamaging)
+            if (damageCoroutine == null)
             {
-                StartCoroutine(WaitForABit(1f));
+                damageCoroutine = StartCoroutine(DealDamageOverTime(other.gameObject));
             }
-            else
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (damageCoroutine != null)
             {
-                StopCoroutine(WaitForABit(0f));
-                isDamaging = false;
+                StopCoroutine(damageCoroutine);
+                damageCoroutine = null;
             }
+        }
+    }
+
+    private IEnumerator DealDamageOverTime(GameObject player)
+    {
+        PlayerHealth health = player.GetComponentInParent<PlayerHealth>();
+
+        while (true)
+        {
+            if (health != null)
+            {
+                health.TakeDamage(damageAmount);
+            }
+
+            yield return new WaitForSeconds(damageInterval);
         }
     }
 }
