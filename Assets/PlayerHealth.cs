@@ -13,6 +13,12 @@ public class PlayerHealth : MonoBehaviour
     void Start()
     {
         currentHealth = maxHealth;
+        
+    }
+
+    void Update()
+    {
+        UpdateHealthBar();
     }
 
     // Update is called once per frame
@@ -24,6 +30,6 @@ public class PlayerHealth : MonoBehaviour
     void UpdateHealthBar()
     {
         healthFill.fillAmount = currentHealth / maxHealth;
-        healthText.text = "Health: "+ currentHealth;
+        healthText.text = ""+ currentHealth + "/"+ maxHealth;
     }
 }
