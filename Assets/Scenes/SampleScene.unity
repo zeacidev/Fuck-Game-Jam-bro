@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c48f79f2e957e6c49b3fbb9853ed9db4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
-  pHealth: {fileID: 7337882016916950495}
+  damageAmount: 10
+  damageInterval: 1
 --- !u!65 &50122690
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1469,7 +1470,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
   m_Material: {fileID: 0}
-  m_Color: {r: 0.19127464, g: 1, b: 0, a: 1}
+  m_Color: {r: 0.14683698, g: 0.764151, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2512,6 +2513,7 @@ MonoBehaviour:
   healthText: {fileID: 860033675}
   currentHealth: 0
   maxHealth: 100
+  drainDuration: 0.5
 --- !u!81 &7548342004786047498
 AudioListener:
   m_ObjectHideFlags: 0
